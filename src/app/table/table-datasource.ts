@@ -49,18 +49,23 @@ export class TableDataSource extends DataSource<TableItem> {
     // Set the paginators length
     this.paginator.length = 500; // this.data.length;
     const mutaciones = merge(...dataMutations);
-    const obsdata = () =>
-      <TableItem[]>(source: Observable<TableItem[]>) =>
-        new Observable<TableItem[]>(observer =>
-          this.getPagedData(this.getSortedData([...this.data])).subscribe({
-            next(x) {
-              observer.next(x);
-            }
-          }));
+    const obsdata = () =>{
+      return OperationFunction<any,any>(source: Observable<TableItem>) => {
+        return new Observable<TableItem[]>(
+          observer =>{
+            this.getPagedData(this.getSortedData([...this.data])).subscribe({
+              next(x) {
+                observer.next(x);
+              }        
+          })
+        });
+      }
+    }
+  
 
     const observable = mutaciones.pipe( obsdata );
     mutaciones.subscribe(() => console.log('Mutaciones ', mutaciones));
-    mutaciones.pipe(Observable. );
+    mutaciones.pipe( observable );
     observable.subscribe(() => console.log('Observable', observable));
     return observable;
 
