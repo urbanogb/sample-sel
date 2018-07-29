@@ -1,27 +1,12 @@
-# SampleSel
+# Sample multiselection in ajax datasources for Angular
+This is a rapid sample for the propose to change @angular/cdk/collections/selection replacing the Set object javascript collection for a Map object
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.8.
+In this sample the data source is a https://jsonplaceholder.typicode.com/photos' url with 5000 rows for testing propose.
 
-## Development server
+I deploy a standard table component, and modify the table datasource to change a static table to remote data obtaining by rest http request.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Modidfy the selection.ts to change Set object by Map object and inject in the constructor the "key" for each selection, the key is a field in the row data requested, it it's very usual, a key is crucial to update the remote data.
 
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Urbano García Barros
+Vigo - Spain 
+2018-07-29

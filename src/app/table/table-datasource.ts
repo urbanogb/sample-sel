@@ -19,10 +19,14 @@ export interface TableItem {
  * (including sorting, pagination, and filtering).
  */
 export class TableDataSource extends DataSource<TableItem> {
-  data: TableItem[] = [];
   pageSize = 5;
+
   constructor(private paginator: MatPaginator, private sort: MatSort, private http: HttpClient) {
     super();
+  }
+
+  getNumRows() {
+    return 5000; /* Change -it for a rest query */
   }
 
   getData(
@@ -47,12 +51,12 @@ export class TableDataSource extends DataSource<TableItem> {
     // Combine everything that affects the rendered data into one update
     // stream for the data-table to consume.
     const dataMutations = [
-      observableOf(this.data),
+      observableOf(this.pageSize),
       this.paginator.page,
       this.sort.sortChange,
     ];
     // Set the paginators length to sample
-    this.paginator.length = 5000; // this.data.length;
+    this.paginator.length = this.getNumRows(); // this.data.length;
 
     return merge(...dataMutations).pipe(
       debounceTime(300),

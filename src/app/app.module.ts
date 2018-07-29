@@ -12,7 +12,8 @@ import {
   MatButtonModule,
   MatSidenavModule,
   MatIconModule,
-  MatListModule
+  MatListModule,
+  MatCheckboxModule
 } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
 
@@ -33,6 +34,7 @@ import { LayoutModule } from '@angular/cdk/layout';
     MatSidenavModule,
     MatIconModule,
     MatListModule,
+    MatCheckboxModule,
     HttpClientModule
 
   ],

@@ -172,7 +172,7 @@ export class SelectionModel<T> {
   /** Clears out the selected values. */
   private _unmarkAll() {
     if (!this.isEmpty()) {
-      this._selection.forEach(value => this._unmarkSelected(value));
+      this._selection.clear();
     }
   }
 
