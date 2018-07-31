@@ -2,8 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort } from '@angular/material';
 import { TableDataSource } from './table-datasource';
 import { HttpClient } from '@angular/common/http';
-import { SelectionModel } from '@angular/cdk/collections';
-//import { SelectionModel } from './selection';
+// import { SelectionModel } from '@angular/cdk/collections';
+import { MarkedModel } from './markedmodel';
 
 
 @Component({
@@ -15,7 +15,7 @@ export class TableComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   dataSource: TableDataSource;
-  public selection = new SelectionModel(true, []);
+  public markation = new MarkedModel(true, []);
 
   constructor(private http: HttpClient) {
     console.log(http);
@@ -29,13 +29,13 @@ export class TableComponent implements OnInit {
   }
 
   unpublish() {
-    this.selection.selected.forEach(value => {
+    this.markation.marked.markedItems.forEach(value => {
       console.log('Unpublish ', value, ' with rest api, todo.... ');
     });
   }
 
   publish() {
-    this.selection.selected.forEach(value => {
+    this.markation.marked.markedItems.forEach(value => {
       console.log('Publish ', value, ' with rest api, todo.... ');
     });
   }

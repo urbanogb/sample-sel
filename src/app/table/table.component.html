@@ -4,11 +4,11 @@
     <!-- Checkbox Column -->
     <ng-container matColumnDef="select">
         <th  *matHeaderCellDef>
-          <img *ngIf="selection.hasValue()" class="icon" (click)="unpublish()" src="assets/icons/cancel.png" />
-          <img *ngIf="selection.hasValue()" class="icon" (click)="publish()" src="assets/icons/approve.png" />
+          <img *ngIf="markation.hasValue()" class="icon" (click)="unpublish()" src="assets/icons/cancel.png" />
+          <img *ngIf="markation.hasValue()" class="icon" (click)="publish()"   src="assets/icons/approve.png" />
         </th>
         <td  *matCellDef="let row">
-          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? markation.toggle(row) : null" [checked]="markation.isMarked(row)">
           </mat-checkbox>
         </td>
       </ng-container>

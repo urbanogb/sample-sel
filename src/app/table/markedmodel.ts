@@ -6,68 +6,77 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Subject} from 'rxjs';
+import { Subject } from 'rxjs';
+
+export interface MarkedItems<T> {
+  containSelected: boolean;
+  markedItems: T[];
+}
+
 
 /**
  * Class to be used to power selecting one or more options from a list.
  */
-export class SelectionModel<T> {
-  
+export class MarkedModel<T> {
 
   /** Currently-selected values. !!Change Set by Map!! */
-  private _selection = new Map<string , T>();
+  private _markation = new Map<string, T>();
+  private _containsSelected = true;
 
   /** Keeps track of the deselected options that haven't been emitted by the change event. */
-  private _deselectedToEmit: T[] = [];
+  private _unmarkededToEmit: T[] = [];
 
   /** Keeps track of the selected options that haven't been emitted by the change event. */
-  private _selectedToEmit: T[] = [];
+  private _markedToEmit: T[] = [];
 
   /** Cache for the array value of the selected items. */
-  private _selected: T[] | null;
+  private _marked: T[] | null;
 
   /** Selected values. */
-  get selected(): T[] {
-    if (!this._selected) {
-      this._selected = Array.from(this._selection.values());
+  get marked(): MarkedItems<T> {
+    if (!this._marked) {
+      this._marked = Array.from(this._markation.values());
     }
-    return this._selected;
+    return {
+      containSelected: this._containsSelected,
+      markedItems: this._marked
+    };
   }
 
   /** Event emitted when the value has changed. */
-  onChange: Subject<SelectionChange<T>> | null = this._emitChanges ? new Subject() : null;
+  onChange: Subject<MarkationChange<T>> | null = this._emitChanges ? new Subject() : null;
 
   constructor(
     private _multiple = false,
-    initiallySelectedValues?: T[],
+    initiallyMarkedValues?: T[],
     private _emitChanges = true,
     private _keyField = 'id') {
 
-    if (initiallySelectedValues && initiallySelectedValues.length) {
+    if (initiallyMarkedValues && initiallyMarkedValues.length) {
       if (_multiple) {
-        initiallySelectedValues.forEach(value => this._markSelected(value));
+        initiallyMarkedValues.forEach(value => this._markSelected(value));
       } else {
-        this._markSelected(initiallySelectedValues[0]);
+        this._markSelected(initiallyMarkedValues[0]);
       }
 
       // Clear the array in order to avoid firing the change event for preselected values.
-      this._selectedToEmit.length = 0;
+      this._markedToEmit.length = 0;
     }
   }
 
   /**
-   * Selects a value or an array of values.
+   * Mark a value or an array of values.
    */
-  select(...values: T[]): void {
+  mark(...values: T[]): void {
     this._verifyValueAssignment(values);
     values.forEach(value => this._markSelected(value));
     this._emitChangeEvent();
   }
 
   /**
-   * Deselects a value or an array of values.
+   * Mark a value or an array of values.
    */
-  deselect(...values: T[]): void {
+  unmark(...values: T[]): void {
     this._verifyValueAssignment(values);
     values.forEach(value => this._unmarkSelected(value));
     this._emitChangeEvent();
@@ -77,7 +86,7 @@ export class SelectionModel<T> {
    * Toggles a value between selected and deselected.
    */
   toggle(value: T): void {
-    this.isSelected(value) ? this.deselect(value) : this.select(value);
+    this.isMarked(value) ? this.unmark(value) : this.mark(value);
   }
 
   /**
@@ -88,33 +97,41 @@ export class SelectionModel<T> {
     this._emitChangeEvent();
   }
 
+  reverse(): void {
+    this._containsSelected = !this._containsSelected;
+  }
+
   /**
-   * Determines whether a value is selected.
+   * Determines whether a value is marked.
    */
-  isSelected(value: T): boolean {
-    return this._selection.has(value[this._keyField]);
+  isMarked(value: T): boolean {
+    if (this._containsSelected) {
+      return this._markation.has(value[this._keyField]);
+    } else {
+      return !this._markation.has(value[this._keyField]);
+    }
+
   }
 
   /**
    * Determines whether the model does not have a value.
    */
   isEmpty(): boolean {
-    return this._selection.size === 0;
+    if (this._containsSelected) {
+      return this._markation.size === 0;
+    } else {
+      return this._markation.size !== 0;
+    }
   }
 
   /**
    * Determines whether the model has a value.
    */
   hasValue(): boolean {
-    return !this.isEmpty();
-  }
-
-  /**
-   * Sorts the selected values based on a predicate function.
-   */
-  sort(predicate?: (a: T, b: T) => number): void {
-    if (this._multiple && this.selected) {
-      this._selected.sort(predicate);
+    if (this._containsSelected) {
+      return !this.isEmpty();
+    } else {
+      return this.isEmpty();
     }
   }
 
@@ -128,43 +145,43 @@ export class SelectionModel<T> {
   /** Emits a change event and clears the records of selected and deselected values. */
   private _emitChangeEvent() {
     // Clear the selected values so they can be re-cached.
-    this._selected = null;
+    this._marked = null;
 
-    if (this._selectedToEmit.length || this._deselectedToEmit.length) {
+    if (this._markedToEmit.length || this._unmarkededToEmit.length) {
       if (this.onChange) {
         this.onChange.next({
           source: this,
-          added: this._selectedToEmit,
-          removed: this._deselectedToEmit
+          added: this._markedToEmit,
+          removed: this._unmarkededToEmit
         });
       }
 
-      this._deselectedToEmit = [];
-      this._selectedToEmit = [];
+      this._unmarkededToEmit = [];
+      this._markedToEmit = [];
     }
   }
 
   /** Selects a value. */
   private _markSelected(value: T) {
-    if (!this.isSelected(value)) {
+    if (!this.isMarked(value)) {
       if (!this._multiple) {
         this._unmarkAll();
       }
 
-      this._selection.set(value[this._keyField], value);
+      this._markation.set(value[this._keyField], value);
 
       if (this._emitChanges) {
-        this._selectedToEmit.push(value);
+        this._markedToEmit.push(value);
       }
     }
   }
 
   /** Deselects a value. */
   private _unmarkSelected(value: T) {
-    if (this.isSelected(value)) {
-      this._selection.delete(value[this._keyField]);
+    if (this.isMarked(value)) {
+      this._markation.delete(value[this._keyField]);
       if (this._emitChanges) {
-        this._deselectedToEmit.push(value);
+        this._unmarkededToEmit.push(value);
       }
     }
   }
@@ -172,7 +189,7 @@ export class SelectionModel<T> {
   /** Clears out the selected values. */
   private _unmarkAll() {
     if (!this.isEmpty()) {
-      this._selection.clear();
+      this._markation.clear();
     }
   }
 
@@ -188,12 +205,12 @@ export class SelectionModel<T> {
 }
 
 /**
- * Event emitted when the value of a MatSelectionModel has changed.
+ * Event emitted when the value of a MatMarkedModelMap has changed.
  * @docs-private
  */
-export interface SelectionChange<T> {
+export interface MarkationChange<T> {
   /** Model that dispatched the event. */
-  source: SelectionModel<T>;
+  source: MarkedModel<T>;
   /** Options that were added to the model. */
   added: T[];
   /** Options that were removed from the model. */
@@ -205,5 +222,5 @@ export interface SelectionChange<T> {
  * with a single value.
  */
 export function getMultipleValuesInSingleSelectionError() {
-  return Error('Cannot pass multiple values into SelectionModel with single-value mode.');
+  return Error('Cannot pass multiple values into MarkedModel with single-value mode.');
 }
