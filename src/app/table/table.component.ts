@@ -2,7 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort } from '@angular/material';
 import { TableDataSource } from './table-datasource';
 import { HttpClient } from '@angular/common/http';
-import { SelectionModel } from './selection';
+import { SelectionModel } from '@angular/cdk/collections';
+//import { SelectionModel } from './selection';
+
 
 @Component({
   selector: 'app-table',
