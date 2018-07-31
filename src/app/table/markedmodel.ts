@@ -43,6 +43,16 @@ export class MarkedModel<T> {
     };
   }
 
+  get allchecked(): boolean {
+    const rta = this.isAllSelected();
+    return rta;
+  }
+
+  get indeterminate(): boolean {
+    return this.isIndeterminate();
+  }
+
+
   /** Event emitted when the value has changed. */
   onChange: Subject<MarkationChange<T>> | null = this._emitChanges ? new Subject() : null;
 
@@ -90,49 +100,117 @@ export class MarkedModel<T> {
   }
 
   /**
-   * Clears all of the selected values.
+   * Clears all Marked values.
    */
-  clear(): void {
+  clearMarked(): void {
     this._unmarkAll();
     this._emitChangeEvent();
   }
 
+  /**
+     * Clears all selected values.
+     */
+  clearSelection(): void {
+    this._unmarkAll();
+    this._containsSelected = true;
+    this._emitChangeEvent();
+  }
+
+  /**
+  * selected all values.
+  */
+
+  selectAll(): void {
+    this._unmarkAll();
+    this._containsSelected = false;
+    this._emitChangeEvent();
+  }
+
+  /**
+* selected all values.
+*/
+
+  unSelectAll(): void {
+    this._unmarkAll();
+    this._containsSelected = true;
+    this._emitChangeEvent();
+  }
+
+  toggleSelectAll() {
+    if (this.indeterminate) {
+      this._containsSelected = false;
+    } else {
+      this._containsSelected = !this._containsSelected;
+    }
+    this._unmarkAll();
+    this._emitChangeEvent();
+  }
+
+  /**
+  * Reverse selection
+  */
+
   reverse(): void {
     this._containsSelected = !this._containsSelected;
+    this._emitChangeEvent();
   }
 
   /**
    * Determines whether a value is marked.
    */
   isMarked(value: T): boolean {
+    return this._markation.has(value[this._keyField]);
+  }
+
+  /**
+   * Determines whether a value is selected
+   */
+  isSelected(value: T): boolean {
     if (this._containsSelected) {
       return this._markation.has(value[this._keyField]);
     } else {
       return !this._markation.has(value[this._keyField]);
     }
+  }
 
+  isAllSelected() {
+    const result = !this._containsSelected && this.isMarkationEmpty();
+    return result;
+  }
+
+  isIndeterminate() {
+    const result = !this.isMarkationEmpty();
+    return result;
   }
 
   /**
+   * Determines whether the model does not have a marked value.
+   */
+  isMarkationEmpty(): boolean {
+    return this._markation.size === 0;
+  }
+  /**
    * Determines whether the model does not have a value.
    */
-  isEmpty(): boolean {
-    if (this._containsSelected) {
-      return this._markation.size === 0;
-    } else {
-      return this._markation.size !== 0;
-    }
+  isSelectionEmpty(): boolean {
+    return this._containsSelected && (this._markation.size === 0);
   }
+
+
+
+  /**
+   * Determines whether the model has marked value.
+   */
+  hasMarkedValue(): boolean {
+    return !this.isSelectionEmpty();
+  }
+
 
   /**
    * Determines whether the model has a value.
    */
-  hasValue(): boolean {
-    if (this._containsSelected) {
-      return !this.isEmpty();
-    } else {
-      return this.isEmpty();
-    }
+  hasSelectedValue(): boolean {
+    return !this.isSelectionEmpty();
   }
 
   /**
@@ -188,7 +266,7 @@ export class MarkedModel<T> {
 
   /** Clears out the selected values. */
   private _unmarkAll() {
-    if (!this.isEmpty()) {
+    if (!this.isMarkationEmpty()) {
       this._markation.clear();
     }
   }

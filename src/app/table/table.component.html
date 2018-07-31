@@ -1,17 +1,21 @@
-<div  class="mat-elevation-z8">
+<div class="mat-elevation-z8">
   <table mat-table #table width="100%" [dataSource]="dataSource" matSort aria-label="Elements">
 
     <!-- Checkbox Column -->
     <ng-container matColumnDef="select">
-        <th  *matHeaderCellDef>
-          <img *ngIf="markation.hasValue()" class="icon" (click)="unpublish()" src="assets/icons/cancel.png" />
-          <img *ngIf="markation.hasValue()" class="icon" (click)="publish()"   src="assets/icons/approve.png" />
-        </th>
-        <td  *matCellDef="let row">
-          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? markation.toggle(row) : null" [checked]="markation.isMarked(row)">
-          </mat-checkbox>
-        </td>
-      </ng-container>
+      <th *matHeaderCellDef>
+        <mat-checkbox 
+        (click)="$event.stopPropagation()" 
+        (change)="$event ? markation.toggleSelectAll() : null" 
+        [(checked)]="markation.allchecked"
+        [(indeterminate)]="markation.indeterminate">
+        </mat-checkbox>
+      </th>
+      <td *matCellDef="let row">
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? markation.toggle(row) : null" [checked]="markation.isSelected(row)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
 
     <!-- Album Id Column -->
     <ng-container matColumnDef="albumId">
@@ -21,14 +25,14 @@
 
     <!-- Id Column -->
     <ng-container matColumnDef="id">
-      <th mat-header-cell  *matHeaderCellDef mat-sort-header>Id</th>
-      <td mat-cell  *matCellDef="let row">{{row.id}}</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+      <td mat-cell *matCellDef="let row">{{row.id}}</td>
     </ng-container>
 
     <!-- Title Column -->
     <ng-container matColumnDef="title">
-      <th mat-header-cell   *matHeaderCellDef mat-sort-header>Title</th>
-      <td mat-cell   *matCellDef="let row">{{row.title}}</td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
+      <td mat-cell *matCellDef="let row">{{row.title}}</td>
     </ng-container>
 
     <!-- Url Column -->
@@ -49,4 +53,9 @@
 
   <mat-paginator #paginator [length]="dataSource.getNumRows()" [pageIndex]="0" [pageSize]="5" [pageSizeOptions]="[5,10,25, 50, 100, 250]">
   </mat-paginator>
+
+  <div *ngIf="markation.hasSelectedValue()">
+    <img class="icon" (click)="unpublishAll()" src="assets/icons/cancel.png" />
+    <img class="icon" (click)="publishAll()" src="assets/icons/approve.png" />
+  </div>
 </div>

@@ -13,7 +13,8 @@ import {
   MatSidenavModule,
   MatIconModule,
   MatListModule,
-  MatCheckboxModule
+  MatCheckboxModule,
+  MAT_CHECKBOX_CLICK_ACTION
 } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
 
@@ -38,7 +39,9 @@ import { LayoutModule } from '@angular/cdk/layout';
     HttpClientModule
 
   ],
-  providers: [ ],
+  providers: [
+   /* {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'noop'} */
+   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
