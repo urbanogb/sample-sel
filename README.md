@@ -1,3 +1,6 @@
+# The problem with SelectModel and ajax tables
+Using the selectmodel class of the library material / cdk / collections / selection, in a table generated with the material schema:table, paged, orderly, i find that when i advance and rewind pages the selection is lost.
+
 # Sample multiselection in ajax datasources for Angular
 This is a rapid sample for the propose to change @angular/cdk/collections/selection replacing the Set object javascript collection for a Map object
 
@@ -8,7 +11,6 @@ I deploy a standard table component with pagination and ordering, and modify the
 I modify the selection.ts to change Set object by Map object and inject in the constructor the "key" for each selection, the key is a field in the row data requested, it it's very usual, a key is crucial to update the remote data.
 
 This modification save the actual selection of any/multiple pags and orders.
-
 
 # Markation vs Selection
 Marking a line no longer involves selecting it. The selected lines can be those marked or all the lines except those marked.
