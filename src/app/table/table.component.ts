@@ -28,13 +28,13 @@ export class TableComponent implements OnInit {
     this.dataSource = new TableDataSource(this.paginator, this.sort, this.http);
   }
 
-  unpublish() {
+  unpublishAll() {
     this.markation.marked.markedItems.forEach(value => {
       console.log('Unpublish ', value, ' with rest api, todo.... ');
     });
   }
 
-  publish() {
+  publishAll() {
     this.markation.marked.markedItems.forEach(value => {
       console.log('Publish ', value, ' with rest api, todo.... ');
     });

@@ -4,11 +4,8 @@
     <!-- Checkbox Column -->
     <ng-container matColumnDef="select">
       <th *matHeaderCellDef>
-        <mat-checkbox 
-        (click)="$event.stopPropagation()" 
-        (change)="$event ? markation.toggleSelectAll() : null" 
-        [(checked)]="markation.allchecked"
-        [(indeterminate)]="markation.indeterminate">
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? markation.toggleSelectAll() : null" [(checked)]="markation.allchecked"
+          [(indeterminate)]="markation.indeterminate">
         </mat-checkbox>
       </th>
       <td *matCellDef="let row">
@@ -55,7 +52,8 @@
   </mat-paginator>
 
   <div *ngIf="markation.hasSelectedValue()">
-    <img class="icon" (click)="unpublishAll()" src="assets/icons/cancel.png" />
-    <img class="icon" (click)="publishAll()" src="assets/icons/approve.png" />
+    <mat-slide-toggle class="reverse" (change)="markation.reverse()"></mat-slide-toggle>
+    <!--img class="icon" (click)="unpublishAll()" src="assets/icons/cancel.png" />
+    <img class="icon" (click)="publishAll()" src="assets/icons/approve.png" / -->
   </div>
 </div>

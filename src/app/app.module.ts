@@ -14,7 +14,7 @@ import {
   MatIconModule,
   MatListModule,
   MatCheckboxModule,
-  MAT_CHECKBOX_CLICK_ACTION
+  MatSlideToggleModule
 } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
 
@@ -29,6 +29,7 @@ import { LayoutModule } from '@angular/cdk/layout';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
+    MatSlideToggleModule,
     LayoutModule,
     MatToolbarModule,
     MatButtonModule,
@@ -39,9 +40,7 @@ import { LayoutModule } from '@angular/cdk/layout';
     HttpClientModule
 
   ],
-  providers: [
-   /* {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'noop'} */
-   ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
