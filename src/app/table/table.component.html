@@ -52,7 +52,7 @@
   </mat-paginator>
 
   <div *ngIf="markation.hasSelectedValue()">
-    <mat-slide-toggle class="reverse" (change)="markation.reverse()"></mat-slide-toggle>
+    <mat-slide-toggle class="reverse" (change)="markation.reverse()">Invert selection</mat-slide-toggle>
     <!--img class="icon" (click)="unpublishAll()" src="assets/icons/cancel.png" />
     <img class="icon" (click)="publishAll()" src="assets/icons/approve.png" / -->
   </div>
