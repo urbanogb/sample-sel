@@ -10,6 +10,16 @@ I modify the selection.ts to change Set object by Map object and inject in the c
 This modification save the actual selection of any/multiple pags and orders.
 
 
+# Markation vs Selection
+Marking a line no longer involves selecting it. The selected lines can be those marked or all the lines except those marked.
+
+Mark is the action of the user on a checkbox. A user will not make many marks. If we start from an empty selection, marking will be the same as selecting rows.
+
+If we start from all the selected rows, mark will deselect rows.
+
+When we request the selection we will receive what the user has marked and a flag that indicates whether it has started from an empty selection or from all the rows of the selected table, so we can decide if the marks correspond to the action of selecting or deselecting .
+
+
 Urbano García Barros
 Vigo - Spain 
 2018-07-29
